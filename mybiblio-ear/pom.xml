@@ -1,0 +1,145 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>mybiblio-parent</artifactId>
+		<groupId>org.mybiblio</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.mybiblio</groupId>
+	<artifactId>mybiblio-ear</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>ear</packaging>
+	<name>mybiblio-ear</name>
+	<description>mybiblio-ear</description>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam</artifactId>
+			<type>ejb</type>
+		</dependency>
+
+		<!-- mybiblio ejb + war -->
+		<dependency>
+			<groupId>org.mybiblio</groupId>
+			<artifactId>mybiblio-ejb</artifactId>
+			<type>ejb</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybiblio</groupId>
+			<artifactId>mybiblio-war</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr-runtime</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.el</groupId>
+			<artifactId>jboss-el</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam-remoting</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.framework</groupId>
+			<artifactId>richfaces-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<displayName>${project.name}</displayName>
+					<description>${project.description}</description>
+					<modules>
+						<ejbModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>mybiblio-ejb</artifactId>
+						</ejbModule>
+						<webModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>mybiblio-war</artifactId>
+							<contextRoot>/mybiblio</contextRoot>
+						</webModule>
+
+						<jarModule>
+							<groupId>org.antlr</groupId>
+							<artifactId>antlr-runtime</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>commons-beanutils</groupId>
+							<artifactId>commons-beanutils</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.drools</groupId>
+							<artifactId>drools-compiler</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.drools</groupId>
+							<artifactId>drools-core</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.jboss.el</groupId>
+							<artifactId>jboss-el</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.jboss.seam</groupId>
+							<artifactId>jboss-seam-remoting</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.richfaces.framework</groupId>
+							<artifactId>richfaces-api</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+					</modules>
+					<jboss>
+						<version>5</version>
+						<module-order>strict</module-order>
+						<loader-repository>seam.jboss.org:loader=${project.artifactId}</loader-repository>
+					</jboss>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

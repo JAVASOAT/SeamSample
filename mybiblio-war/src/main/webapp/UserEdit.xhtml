@@ -1,0 +1,159 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="user" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{userHome.managed ? 'Edit' : 'Add'} User</f:facet>
+
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{userHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="firstnameField" template="layout/edit.xhtml">
+                <ui:define name="label">Firstname</ui:define>
+                <h:inputText id="firstname"
+                       required="true"
+                           size="100"
+                      maxlength="100"
+                          value="#{userHome.instance.firstname}">
+                    <a:support event="onblur" reRender="firstnameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="emailField" template="layout/edit.xhtml">
+                <ui:define name="label">Email</ui:define>
+                <h:inputText id="email"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{userHome.instance.email}">
+                    <a:support event="onblur" reRender="emailField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="passwordField" template="layout/edit.xhtml">
+                <ui:define name="label">Password</ui:define>
+                <h:inputText id="password"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{userHome.instance.password}">
+                    <a:support event="onblur" reRender="passwordField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{userHome.persist}"
+                       disabled="#{!userHome.wired}"
+                       rendered="#{!userHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{userHome.update}"
+                       rendered="#{userHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{userHome.remove}"
+                      immediate="true"
+                       rendered="#{userHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/User.xhtml"
+                rendered="#{userHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty userFrom ? 'UserList' : userFrom}.xhtml"
+                rendered="#{!userHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Rents">
+        <h:form styleClass="association" id="rentsChildren">
+
+            <h:outputText value="There are no rents associated with this user."
+                       rendered="#{empty userHome.rents}"/>
+
+            <rich:dataTable value="#{userHome.rents}"
+                           var="_rent"
+                      rendered="#{not empty userHome.rents}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="rentsTable">
+                <rich:column sortBy="#{_rent.idRent}">
+                    <f:facet name="header">Id rent</f:facet>
+                    <h:outputText value="#{_rent.idRent}"/>
+                </rich:column>
+                <rich:column sortBy="#{_rent.dateRent}">
+                    <f:facet name="header">Date rent</f:facet>
+                    <h:outputText value="#{_rent.dateRent}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_rent.dateReturn}">
+                    <f:facet name="header">Date return</f:facet>
+                    <h:outputText value="#{_rent.dateReturn}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{userHome.managed}" id="rents">
+        <div class="actionButtons">
+            <s:button id="addrent"
+                   value="Add rent"
+                    view="/RentEdit.xhtml"
+             propagation="none">
+                 <f:param name="userIdUser"
+                         value="#{userHome.instance.idUser}"/>
+                 <f:param name="rentFrom" value="User"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

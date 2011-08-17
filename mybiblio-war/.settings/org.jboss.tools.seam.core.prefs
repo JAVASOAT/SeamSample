@@ -1,0 +1,15 @@
+#Wed Aug 17 15:41:13 CEST 2011
+action.package=org.domain.mybiblio.session
+action.sources=/mybiblio-ejb/src/main/java
+eclipse.preferences.version=1
+model.package=org.domain.mybiblio.session
+model.sources=/mybiblio-ejb/src/main/java
+seam.ejb.project=mybiblio-ejb
+seam.project.connection.profile=MySQL
+seam.project.deployment.type=ear
+seam.project.settings.version=1.1
+seam.project.web.root.folder=/mybiblio-war/src/main/webapp
+seam.test.creating=false
+seam.test.project=mybiblio-war
+test.package=org.domain.mybibliowar.test
+test.sources=/mybiblio-war/src/main

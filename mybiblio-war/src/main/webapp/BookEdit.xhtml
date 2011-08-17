@@ -1,0 +1,210 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="book" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{bookHome.managed ? 'Edit' : 'Add'} Book</f:facet>
+
+
+
+            <s:decorate id="isbnField" template="layout/edit.xhtml">
+                <ui:define name="label">Isbn</ui:define>
+                <h:inputText id="isbn"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{bookHome.instance.isbn}">
+                    <a:support event="onblur" reRender="isbnField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="titleField" template="layout/edit.xhtml">
+                <ui:define name="label">Title</ui:define>
+                <h:inputText id="title"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{bookHome.instance.title}">
+                    <a:support event="onblur" reRender="titleField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="authorField" template="layout/edit.xhtml">
+                <ui:define name="label">Author</ui:define>
+                <h:inputText id="author"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{bookHome.instance.author}">
+                    <a:support event="onblur" reRender="authorField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="shortDescriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">Short description</ui:define>
+                <h:inputTextarea id="shortDescription"
+                               cols="80"
+                               rows="10"
+                              value="#{bookHome.instance.shortDescription}"/>
+            </s:decorate>
+
+
+            <s:decorate id="longDescriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">Long description</ui:define>
+                <h:inputTextarea id="longDescription"
+                               cols="80"
+                               rows="10"
+                              value="#{bookHome.instance.longDescription}"/>
+            </s:decorate>
+
+
+            <s:decorate id="imageNameField" template="layout/edit.xhtml">
+                <ui:define name="label">Image name</ui:define>
+                <h:inputText id="imageName"
+                           size="100"
+                      maxlength="150"
+                          value="#{bookHome.instance.imageName}">
+                    <a:support event="onblur" reRender="imageNameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{bookHome.persist}"
+                       disabled="#{!bookHome.wired}"
+                       rendered="#{!bookHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{bookHome.update}"
+                       rendered="#{bookHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{bookHome.remove}"
+                      immediate="true"
+                       rendered="#{bookHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Book.xhtml"
+                rendered="#{bookHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty bookFrom ? 'BookList' : bookFrom}.xhtml"
+                rendered="#{!bookHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Rents">
+        <h:form styleClass="association" id="rentsChildren">
+
+            <h:outputText value="There are no rents associated with this book."
+                       rendered="#{empty bookHome.rents}"/>
+
+            <rich:dataTable value="#{bookHome.rents}"
+                           var="_rent"
+                      rendered="#{not empty bookHome.rents}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="rentsTable">
+                <rich:column sortBy="#{_rent.idRent}">
+                    <f:facet name="header">Id rent</f:facet>
+                    <h:outputText value="#{_rent.idRent}"/>
+                </rich:column>
+                <rich:column sortBy="#{_rent.dateRent}">
+                    <f:facet name="header">Date rent</f:facet>
+                    <h:outputText value="#{_rent.dateRent}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_rent.dateReturn}">
+                    <f:facet name="header">Date return</f:facet>
+                    <h:outputText value="#{_rent.dateReturn}">
+                        <s:convertDateTime type="both" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{bookHome.managed}" id="rents">
+        <div class="actionButtons">
+            <s:button id="addrent"
+                   value="Add rent"
+                    view="/RentEdit.xhtml"
+             propagation="none">
+                 <f:param name="bookIdBook"
+                         value="#{bookHome.instance.idBook}"/>
+                 <f:param name="rentFrom" value="Book"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Category books">
+        <h:form styleClass="association" id="categoryBooksChildren">
+
+            <h:outputText value="There are no categoryBooks associated with this book."
+                       rendered="#{empty bookHome.categoryBooks}"/>
+
+            <rich:dataTable value="#{bookHome.categoryBooks}"
+                           var="_categoryBook"
+                      rendered="#{not empty bookHome.categoryBooks}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="categoryBooksTable">
+                <rich:column sortBy="#{_categoryBook.idCategoryBook}">
+                    <f:facet name="header">Id category book</f:facet>
+                    <h:outputText value="#{_categoryBook.idCategoryBook}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{bookHome.managed}" id="categoryBooks">
+        <div class="actionButtons">
+            <s:button id="addcategoryBook"
+                   value="Add categoryBook"
+                    view="/CategoryBookEdit.xhtml"
+             propagation="none">
+                 <f:param name="bookIdBook"
+                         value="#{bookHome.instance.idBook}"/>
+                 <f:param name="categoryBookFrom" value="Book"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

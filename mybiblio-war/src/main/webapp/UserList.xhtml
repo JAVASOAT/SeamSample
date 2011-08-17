@@ -1,0 +1,185 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="userSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="User Search Filter" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name" value="#{userList.user.name}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Firstname</ui:define>
+                <h:inputText id="firstname" value="#{userList.user.firstname}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Email</ui:define>
+                <h:inputText id="email" value="#{userList.user.email}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Password</ui:define>
+                <h:inputText id="password" value="#{userList.user.password}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Match</ui:define>
+                <h:selectOneRadio id="logic" value="#{userList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="All" itemValue="and"/>
+                    <f:selectItem itemLabel="Any" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Search" action="/UserList.xhtml"/>
+            <s:button id="reset" value="Reset" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">User Search Results (#{empty userList.resultList ? 0 : (userList.paginated ? userList.resultCount : userList.resultList.size)})</f:facet>
+    <div class="results" id="userList">
+
+    <h:outputText value="The user search returned no results."
+               rendered="#{empty userList.resultList}"/>
+
+    <rich:dataTable id="userList"
+                var="_user"
+              value="#{userList.resultList}"
+           rendered="#{not empty userList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{userList}"/>
+                    <ui:param name="propertyLabel" value="Id user"/>
+                    <ui:param name="propertyPath" value="user.idUser"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_user.idUser}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{userList}"/>
+                    <ui:param name="propertyLabel" value="Name"/>
+                    <ui:param name="propertyPath" value="user.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_user.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{userList}"/>
+                    <ui:param name="propertyLabel" value="Firstname"/>
+                    <ui:param name="propertyPath" value="user.firstname"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_user.firstname}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{userList}"/>
+                    <ui:param name="propertyLabel" value="Email"/>
+                    <ui:param name="propertyPath" value="user.email"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_user.email}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{userList}"/>
+                    <ui:param name="propertyLabel" value="Password"/>
+                    <ui:param name="propertyPath" value="user.password"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_user.password}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'User' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="userViewId">
+                <f:param name="userIdUser"
+                        value="#{_user.idUser}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/UserEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="userEdit"
+                rendered="#{empty from}">
+                <f:param name="userIdUser"
+                        value="#{_user.idUser}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/UserList.xhtml"
+            rendered="#{userList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/UserList.xhtml"
+            rendered="#{userList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{userList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/UserList.xhtml"
+            rendered="#{userList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{userList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/UserList.xhtml"
+            rendered="#{userList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{userList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/UserEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create user">
+            <f:param name="userIdUser"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

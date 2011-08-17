@@ -1,0 +1,85 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Category Details</f:facet>
+
+
+        <s:decorate id="nameCategory" template="layout/display.xhtml">
+            <ui:define name="label">Name category</ui:define>
+            <h:outputText value="#{categoryHome.instance.nameCategory}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/CategoryEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty categoryFrom ? 'CategoryList' : categoryFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Category books</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="categoryBooksChildren">
+
+        <h:outputText value="There are no categoryBooks associated with this category."
+                   rendered="#{empty categoryHome.categoryBooks}"/>
+
+        <rich:dataTable value="#{categoryHome.categoryBooks}"
+                       var="_categoryBook"
+                  rendered="#{not empty categoryHome.categoryBooks}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="categoryBooksTable">
+            <rich:column sortBy="#{_categoryBook.idCategoryBook}">
+                <f:facet name="header">Id category book</f:facet>
+                <h:outputText value="#{_categoryBook.idCategoryBook}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectcategoryBook"
+                     value="Select"
+                      view="/CategoryBook.xhtml">
+                    <f:param name="categoryBookIdCategoryBook"
+                            value="#{_categoryBook.idCategoryBook}"/>
+                    <f:param name="categoryBookFrom" value="Category"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add categoryBook"
+                view="/CategoryBookEdit.xhtml">
+            <f:param name="categoryIdCategory"
+                    value="#{categoryHome.instance.idCategory}"/>
+            <f:param name="categoryBookFrom" value="Category"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

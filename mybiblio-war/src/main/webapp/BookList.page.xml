@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+   <param name="firstResult" value="#{bookList.firstResult}"/>
+   <param name="sort" value="#{bookList.orderColumn}"/>
+   <param name="dir" value="#{bookList.orderDirection}"/>
+   <param name="logic" value="#{bookList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="isbn" value="#{bookList.book.isbn}"/>
+   <param name="title" value="#{bookList.book.title}"/>
+   <param name="author" value="#{bookList.book.author}"/>
+   <param name="shortDescription" value="#{bookList.book.shortDescription}"/>
+   <param name="longDescription" value="#{bookList.book.longDescription}"/>
+   <param name="imageName" value="#{bookList.book.imageName}"/>
+
+</page>

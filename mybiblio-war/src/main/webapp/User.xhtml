@@ -1,0 +1,112 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">User Details</f:facet>
+
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">Name</ui:define>
+            <h:outputText value="#{userHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="firstname" template="layout/display.xhtml">
+            <ui:define name="label">Firstname</ui:define>
+            <h:outputText value="#{userHome.instance.firstname}"/>
+        </s:decorate>
+
+        <s:decorate id="email" template="layout/display.xhtml">
+            <ui:define name="label">Email</ui:define>
+            <h:outputText value="#{userHome.instance.email}"/>
+        </s:decorate>
+
+        <s:decorate id="password" template="layout/display.xhtml">
+            <ui:define name="label">Password</ui:define>
+            <h:outputText value="#{userHome.instance.password}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/UserEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty userFrom ? 'UserList' : userFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Rents</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="rentsChildren">
+
+        <h:outputText value="There are no rents associated with this user."
+                   rendered="#{empty userHome.rents}"/>
+
+        <rich:dataTable value="#{userHome.rents}"
+                       var="_rent"
+                  rendered="#{not empty userHome.rents}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="rentsTable">
+            <rich:column sortBy="#{_rent.idRent}">
+                <f:facet name="header">Id rent</f:facet>
+                <h:outputText value="#{_rent.idRent}"/>
+            </rich:column>
+            <rich:column sortBy="#{_rent.dateRent}">
+                <f:facet name="header">Date rent</f:facet>
+                <h:outputText value="#{_rent.dateRent}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_rent.dateReturn}">
+                <f:facet name="header">Date return</f:facet>
+                <h:outputText value="#{_rent.dateReturn}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectrent"
+                     value="Select"
+                      view="/Rent.xhtml">
+                    <f:param name="rentIdRent"
+                            value="#{_rent.idRent}"/>
+                    <f:param name="rentFrom" value="User"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add rent"
+                view="/RentEdit.xhtml">
+            <f:param name="userIdUser"
+                    value="#{userHome.instance.idUser}"/>
+            <f:param name="rentFrom" value="User"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

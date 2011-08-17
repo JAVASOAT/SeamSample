@@ -1,0 +1,110 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="category" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{categoryHome.managed ? 'Edit' : 'Add'} Category</f:facet>
+
+
+
+            <s:decorate id="nameCategoryField" template="layout/edit.xhtml">
+                <ui:define name="label">Name category</ui:define>
+                <h:inputText id="nameCategory"
+                           size="100"
+                      maxlength="150"
+                          value="#{categoryHome.instance.nameCategory}">
+                    <a:support event="onblur" reRender="nameCategoryField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{categoryHome.persist}"
+                       disabled="#{!categoryHome.wired}"
+                       rendered="#{!categoryHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{categoryHome.update}"
+                       rendered="#{categoryHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{categoryHome.remove}"
+                      immediate="true"
+                       rendered="#{categoryHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Category.xhtml"
+                rendered="#{categoryHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty categoryFrom ? 'CategoryList' : categoryFrom}.xhtml"
+                rendered="#{!categoryHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Category books">
+        <h:form styleClass="association" id="categoryBooksChildren">
+
+            <h:outputText value="There are no categoryBooks associated with this category."
+                       rendered="#{empty categoryHome.categoryBooks}"/>
+
+            <rich:dataTable value="#{categoryHome.categoryBooks}"
+                           var="_categoryBook"
+                      rendered="#{not empty categoryHome.categoryBooks}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="categoryBooksTable">
+                <rich:column sortBy="#{_categoryBook.idCategoryBook}">
+                    <f:facet name="header">Id category book</f:facet>
+                    <h:outputText value="#{_categoryBook.idCategoryBook}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{categoryHome.managed}" id="categoryBooks">
+        <div class="actionButtons">
+            <s:button id="addcategoryBook"
+                   value="Add categoryBook"
+                    view="/CategoryBookEdit.xhtml"
+             propagation="none">
+                 <f:param name="categoryIdCategory"
+                         value="#{categoryHome.instance.idCategory}"/>
+                 <f:param name="categoryBookFrom" value="Category"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

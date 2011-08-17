@@ -1,0 +1,155 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Rent Details</f:facet>
+
+
+        <s:decorate id="dateRent" template="layout/display.xhtml">
+            <ui:define name="label">Date rent</ui:define>
+            <h:outputText value="#{rentHome.instance.dateRent}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="dateReturn" template="layout/display.xhtml">
+            <ui:define name="label">Date return</ui:define>
+            <h:outputText value="#{rentHome.instance.dateReturn}">
+                <s:convertDateTime type="both" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RentEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty rentFrom ? 'RentList' : rentFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Book</h:panelGroup>
+        </f:facet>
+    <div class="association" id="bookParent">
+
+        <h:outputText value="There is no book associated with this rent."
+                   rendered="#{rentHome.instance.book == null}"/>
+
+        <rich:dataTable var="_book"
+                   value="#{rentHome.instance.book}"
+                rendered="#{rentHome.instance.book != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="bookTable">
+            <h:column>
+                <f:facet name="header">Id book</f:facet>
+                <h:outputText value="#{_book.idBook}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Isbn</f:facet>
+                <h:outputText value="#{_book.isbn}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Title</f:facet>
+                <h:outputText value="#{_book.title}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Author</f:facet>
+                <h:outputText value="#{_book.author}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Short description</f:facet>
+                <h:outputText value="#{_book.shortDescription}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Long description</f:facet>
+                <h:outputText value="#{_book.longDescription}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Image name</f:facet>
+                <h:outputText value="#{_book.imageName}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewbook"
+                     value="View"
+                      view="/Book.xhtml">
+                    <f:param name="bookIdBook"
+                           value="#{_book.idBook}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>User</h:panelGroup>
+        </f:facet>
+    <div class="association" id="userParent">
+
+        <h:outputText value="There is no user associated with this rent."
+                   rendered="#{rentHome.instance.user == null}"/>
+
+        <rich:dataTable var="_user"
+                   value="#{rentHome.instance.user}"
+                rendered="#{rentHome.instance.user != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="userTable">
+            <h:column>
+                <f:facet name="header">Id user</f:facet>
+                <h:outputText value="#{_user.idUser}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_user.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Firstname</f:facet>
+                <h:outputText value="#{_user.firstname}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Email</f:facet>
+                <h:outputText value="#{_user.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Password</f:facet>
+                <h:outputText value="#{_user.password}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewuser"
+                     value="View"
+                      view="/User.xhtml">
+                    <f:param name="userIdUser"
+                           value="#{_user.idUser}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

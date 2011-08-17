@@ -1,0 +1,165 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Book Details</f:facet>
+
+
+        <s:decorate id="isbn" template="layout/display.xhtml">
+            <ui:define name="label">Isbn</ui:define>
+            <h:outputText value="#{bookHome.instance.isbn}"/>
+        </s:decorate>
+
+        <s:decorate id="title" template="layout/display.xhtml">
+            <ui:define name="label">Title</ui:define>
+            <h:outputText value="#{bookHome.instance.title}"/>
+        </s:decorate>
+
+        <s:decorate id="author" template="layout/display.xhtml">
+            <ui:define name="label">Author</ui:define>
+            <h:outputText value="#{bookHome.instance.author}"/>
+        </s:decorate>
+
+        <s:decorate id="shortDescription" template="layout/display.xhtml">
+            <ui:define name="label">Short description</ui:define>
+            <h:outputText value="#{bookHome.instance.shortDescription}"/>
+        </s:decorate>
+
+        <s:decorate id="longDescription" template="layout/display.xhtml">
+            <ui:define name="label">Long description</ui:define>
+            <h:outputText value="#{bookHome.instance.longDescription}"/>
+        </s:decorate>
+
+        <s:decorate id="imageName" template="layout/display.xhtml">
+            <ui:define name="label">Image name</ui:define>
+            <h:outputText value="#{bookHome.instance.imageName}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/BookEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty bookFrom ? 'BookList' : bookFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Rents</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="rentsChildren">
+
+        <h:outputText value="There are no rents associated with this book."
+                   rendered="#{empty bookHome.rents}"/>
+
+        <rich:dataTable value="#{bookHome.rents}"
+                       var="_rent"
+                  rendered="#{not empty bookHome.rents}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="rentsTable">
+            <rich:column sortBy="#{_rent.idRent}">
+                <f:facet name="header">Id rent</f:facet>
+                <h:outputText value="#{_rent.idRent}"/>
+            </rich:column>
+            <rich:column sortBy="#{_rent.dateRent}">
+                <f:facet name="header">Date rent</f:facet>
+                <h:outputText value="#{_rent.dateRent}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_rent.dateReturn}">
+                <f:facet name="header">Date return</f:facet>
+                <h:outputText value="#{_rent.dateReturn}">
+                    <s:convertDateTime type="both" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectrent"
+                     value="Select"
+                      view="/Rent.xhtml">
+                    <f:param name="rentIdRent"
+                            value="#{_rent.idRent}"/>
+                    <f:param name="rentFrom" value="Book"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add rent"
+                view="/RentEdit.xhtml">
+            <f:param name="bookIdBook"
+                    value="#{bookHome.instance.idBook}"/>
+            <f:param name="rentFrom" value="Book"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Category books</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="categoryBooksChildren">
+
+        <h:outputText value="There are no categoryBooks associated with this book."
+                   rendered="#{empty bookHome.categoryBooks}"/>
+
+        <rich:dataTable value="#{bookHome.categoryBooks}"
+                       var="_categoryBook"
+                  rendered="#{not empty bookHome.categoryBooks}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="categoryBooksTable">
+            <rich:column sortBy="#{_categoryBook.idCategoryBook}">
+                <f:facet name="header">Id category book</f:facet>
+                <h:outputText value="#{_categoryBook.idCategoryBook}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectcategoryBook"
+                     value="Select"
+                      view="/CategoryBook.xhtml">
+                    <f:param name="categoryBookIdCategoryBook"
+                            value="#{_categoryBook.idCategoryBook}"/>
+                    <f:param name="categoryBookFrom" value="Book"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add categoryBook"
+                view="/CategoryBookEdit.xhtml">
+            <f:param name="bookIdBook"
+                    value="#{bookHome.instance.idBook}"/>
+            <f:param name="categoryBookFrom" value="Book"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>
