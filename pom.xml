@@ -48,7 +48,7 @@
 	<dependencyManagement>
 		<dependencies>
 
-			<!-- JBoss Seam -->
+			<!-- JBoss Seam dependencies -->
 			<dependency>
 				<groupId>org.jboss.seam</groupId>
 				<artifactId>jboss-seam</artifactId>
