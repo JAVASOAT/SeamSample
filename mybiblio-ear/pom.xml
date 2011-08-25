@@ -66,6 +66,16 @@
 			<groupId>org.richfaces.framework</groupId>
 			<artifactId>richfaces-api</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.richfaces.samples</groupId>
+			<artifactId>darkX</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.richfaces.samples</groupId>
+			<artifactId>glassX</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -128,6 +138,16 @@
 						<jarModule>
 							<groupId>org.richfaces.framework</groupId>
 							<artifactId>richfaces-api</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.richfaces.samples</groupId>
+							<artifactId>darkX</artifactId>
+							<bundleDir>lib</bundleDir>
+						</jarModule>
+						<jarModule>
+							<groupId>org.richfaces.samples</groupId>
+							<artifactId>glassX</artifactId>
 							<bundleDir>lib</bundleDir>
 						</jarModule>
 					</modules>

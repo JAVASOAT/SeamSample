@@ -390,6 +390,38 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+			
+			<!-- Richfaces new skins -->
+			<dependency>
+				<groupId>org.richfaces.samples</groupId>
+				<artifactId>darkX</artifactId>
+				<version>${version.richfaces}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>jstl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>nekohtml</groupId>
+						<artifactId>nekohtml</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.richfaces.samples</groupId>
+				<artifactId>glassX</artifactId>
+				<version>${version.richfaces}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>javax.servlet</groupId>
+						<artifactId>jstl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>nekohtml</groupId>
+						<artifactId>nekohtml</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 
 			<!-- antlr -->
 			<dependency>
@@ -676,6 +708,19 @@
 				<artifactId>jsf-facelets</artifactId>
 				<version>${version.jsf-facelets}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>javax.faces</groupId>
+				<artifactId>jsf-api</artifactId>
+				<version>1.2_02</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>javax.faces</groupId>
+				<artifactId>jsf-impl</artifactId>
+				<version>1.1_02</version>
+			</dependency>
+			
 
 		</dependencies>
 	</dependencyManagement>
@@ -685,6 +730,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<source>${jdk.source}</source>
 					<target>${jdk.target}</target>
@@ -693,6 +739,42 @@
 					<optimize>${jdk.optimize}</optimize>
 				</configuration>
 			</plugin>
+			
+			<!-- JBoss As-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>jboss-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<serverName>default</serverName>
+					<fileName>target/mybiblio-ear-${project.version}.ear</fileName>
+				</configuration>
+			</plugin>
+			
+			<!-- IDE -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<addVersionToProjectName>false</addVersionToProjectName>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-idea-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<dependenciesAsLibraries>true</dependenciesAsLibraries>
+					<useFullNames>false</useFullNames>
+				</configuration>
+			</plugin>
+			
 		</plugins>
 	</build>
 

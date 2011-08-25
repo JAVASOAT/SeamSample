@@ -22,7 +22,7 @@
 			<groupId>org.jboss.seam</groupId>
 			<artifactId>jboss-seam</artifactId>
 			<type>ejb</type>
-<!-- 			<scope>provided</scope> -->
+			<!-- <scope>provided</scope> -->
 		</dependency>
 
 		<!-- Drools -->
@@ -51,6 +51,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Jsf-api pour resoudre pb dependence eclipse -->
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
